@@ -8,7 +8,7 @@ from inferencebackend.settings import FORUM_FILE_LOCATION
 
 class Forums(models.Model):
     '''
-    Forums model. Stores CSV file for forum
+    Forums model. Stores CSV file for forum and other related information
 
     Fields
         - id
@@ -17,21 +17,25 @@ class Forums(models.Model):
     '''
 
     id = models.UUIDField(
-        primary_key=True, 
-        unique=True, 
-        blank=False, 
-        default=uuid.uuid4, 
+        primary_key=True,
+        unique=True,
+        blank=False,
+        default=uuid.uuid4,
         editable=False
     )
     
-    csv_file = models.FileField(upload_to=FORUM_FILE_LOCATION)
+    csv_file = models.FileField(blank=False, upload_to=FORUM_FILE_LOCATION)
 
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def get_file_name(self):
-        split_folders = self.csv_file.name.split('/')
+        '''
+        Get the name of the forum CSV file
+        '''
 
-        return split_folders[len(split_folders) - 1].replace('.csv', '')
+        full_file = self.csv_file.name.split('/')[-1]
+
+        return full_file.replace('.csv', '')
 
     def __str__(self):
         return f'{self.id} saved at {self.csv_file.name}'

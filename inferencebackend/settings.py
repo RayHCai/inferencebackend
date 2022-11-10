@@ -1,18 +1,24 @@
+import multiprocessing
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-0xgewcna8fox_c@8!#%v1+$sez5d3$8p46g=y%%4rhvt@mp7iu'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 INFERENCES_FILE_LOCATION = 'forum-inference-files/'
 FORUM_FILE_LOCATION = 'forum-csv-files/'
 
+NUM_CORES = multiprocessing.cpu_count()
+
+QA_MODEL_NAME = 'deepset/roberta-base-squad2'
+SENT_MODEL_NAME = 'stsb-mpnet-base-v2'
+
 ALLOWED_HOSTS = []
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
@@ -27,7 +33,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'forums',
-    'foruminferences'
+    'foruminferences',
 ]
 
 MIDDLEWARE = [
@@ -62,20 +68,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'inferencebackend.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -92,10 +90,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -104,13 +98,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
-
 STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

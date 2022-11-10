@@ -10,7 +10,7 @@ def forum_csv_to_df(forum_obj: Forums):
         - forum_obj: Forum
     
     Returns
-        - pandas Dataframe
+        - pandas DataFrame
             - id
             - userid
             - userfullname
@@ -20,7 +20,12 @@ def forum_csv_to_df(forum_obj: Forums):
     forum = pd.read_csv(forum_obj.csv_file)
 
     # only need these columns
-    needed_columns = ['id', 'userid', 'userfullname', 'message']
+    needed_columns = [
+        'id', 
+        'userid', 
+        'userfullname', 
+        'message'
+    ]
 
     # drop all comments and only keep needed columns
     forum = forum.loc[forum.get('parent') == 0][needed_columns]

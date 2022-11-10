@@ -15,7 +15,7 @@ class ForumInferences(models.Model):
     Fields
         - id
         - forum*
-        - infereces
+        - infereces*
         - data_created
     '''
 
@@ -29,9 +29,9 @@ class ForumInferences(models.Model):
 
     forum = models.ForeignKey(Forums, on_delete=models.CASCADE)
 
-    inferences = models.FileField(upload_to=INFERENCES_FILE_LOCATION)
+    inferences = models.FileField(blank=False, upload_to=INFERENCES_FILE_LOCATION)
 
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
         return f'Inferences for {self.forum.get_file_name()}'
