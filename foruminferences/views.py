@@ -269,6 +269,15 @@ class PostRelationsView(APIView):
 
 class QuestionInferenceView(APIView):
     def post(self, request):
+        '''
+        Create inferences for a single question
+
+        Request parameters:
+            forum_id -> id of forum
+            question -> question to make inferences for
+            post_ids -> list of post ids to get answer for
+        '''
+
         forum_id = request.data.get('forum_id')
         question = request.data.get('question')
         post_ids = request.data.get('post_ids')
@@ -320,6 +329,13 @@ class QuestionInferenceView(APIView):
 
 class DeleteInferencesView(APIView):
     def post(self, request):
+        '''
+        Delete inference file
+
+        Request parameters: 
+            forum_id: id of forum
+        '''
+        
         forum_id = request.data.get('forum_id')
 
         if not forum_id:
