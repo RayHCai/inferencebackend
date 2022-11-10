@@ -4,20 +4,27 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from transformers import pipeline
-from sentence_transformers import SentenceTransformer, util
+from inferencebackend.utils import forum_csv_to_df
+from inferencebackend.settings import INFERENCES_FILE_LOCATION, NUM_CORES, QA_MODEL_NAME, SENT_MODEL_NAME
 
 from forums.models import Forums
 
 from foruminferences.models import ForumInferences
 from foruminferences.forms import PostRelationsForm
 
-from inferencebackend.test_utils import forum_csv_to_df
-from inferencebackend.settings import INFERENCES_FILE_LOCATION, NUM_CORES, QA_MODEL_NAME, SENT_MODEL_NAME
+from transformers import pipeline
+from sentence_transformers import SentenceTransformer, util
 
 def cosine_similarity(vec1, vec2):
     '''
     Calculate cosine similarity between two sentence embeddings
+
+    Args:
+        vec1: Embedding of first sentence
+        vec2: Embedding of second sentence
+
+    Returns:
+        Similarity between two sentence vectors (float)
     '''
 
     return util.pytorch_cos_sim(vec1, vec2).tolist()[0][0]
@@ -25,6 +32,19 @@ def cosine_similarity(vec1, vec2):
 def make_inferences(qa_model, sent_model, question, context):
     '''
     Make inferences for a question given a context
+
+    Args:
+        qa_model: pipeline
+        sent_model: SentenceTransformer
+        question: string
+        context: string
+    
+    Returns:
+        Object with results for inferences
+            - answer: answer to given question
+            - start_ind: start index of the answer
+            - end_ind: end index of the answer 
+            - answer_embedding: list version of embedding for the answer
     '''
 
     # qa model requires question and context
@@ -43,9 +63,9 @@ def make_inferences(qa_model, sent_model, question, context):
 
     return {
         'answer': qa_result['answer'],
-        'start_ind': qa_result['start'], # start index of the answer
-        'end_ind': qa_result['end'], # end index of the answer,
-        'answer_embedding': answer_embedding.tolist() # need to convert to list so it is JSON serializable
+        'start_ind': qa_result['start'],
+        'end_ind': qa_result['end'],
+        'answer_embedding': answer_embedding.tolist()
     }
 
 class InferencesView(APIView):
@@ -67,12 +87,13 @@ class InferencesView(APIView):
         except Forums.DoesNotExist:
             return Response({'message': 'Forum does not exist'}, status=404)
 
+        # if there are no inferences for forum object
         if not (
-            forum_inferences := ForumInferences.objects.filter(forum=forum_obj).first() # if there are no inferences for forum object
+            forum_inferences := ForumInferences.objects.filter(forum=forum_obj).first()
         ):
             return Response({'message': 'No inferences exist for forum'}, status=404)
 
-        with open(f'{INFERENCES_FILE_LOCATION}{forum_inferences.inferences.name}') as inference_file:
+        with open(INFERENCES_FILE_LOCATION + forum_inferences.inferences.name) as inference_file:
             inference_dict = json.loads(inference_file.read())
 
             return Response(
@@ -124,7 +145,14 @@ class InferencesView(APIView):
             post_answers = []
 
             for question in questions: # then each question
-                post_answers.append(make_inferences(qa_model, sent_model, question, post.message))
+                post_answers.append(
+                    make_inferences(
+                        qa_model, 
+                        sent_model, 
+                        question, 
+                        post.message
+                    )
+                )
 
             inferences[post.id] = post_answers
 
@@ -136,10 +164,11 @@ class InferencesView(APIView):
         forum_file_name = forum_obj.get_file_name()
 
         inference_file_name = f'{forum_file_name}_inferences.json'
+        inference_file_location = INFERENCES_FILE_LOCATION + inference_file_name
 
-        open(f'{INFERENCES_FILE_LOCATION}{inference_file_name}', 'x') # create inference file
+        open(inference_file_location, 'x') # create inference file
 
-        with open(f'{INFERENCES_FILE_LOCATION}{inference_file_name}', 'w') as forum_inference:
+        with open(inference_file_location, 'w') as forum_inference:
             forum_inference.write(
                 json.dumps(full_data)
             )
@@ -190,7 +219,7 @@ class PostRelationsView(APIView):
         
         inferences = {}
 
-        with open(f'{INFERENCES_FILE_LOCATION}{forum_inferences.inferences.name}') as inference_file:
+        with open(INFERENCES_FILE_LOCATION + forum_inferences.inferences.name) as inference_file:
             inferences = json.loads(inference_file.read())
         
         question = post_relations_form.cleaned_data.get('question')
@@ -208,9 +237,7 @@ class PostRelationsView(APIView):
         post_id = str(post_relations_form.cleaned_data.get('post_id'))
 
         if not (
-            base_inference := (
-                inferences_dict.get(post_id)
-            )
+            base_inference := inferences_dict.get(post_id)
         ): 
             return Response({'message': 'Post ID does not exist on forum'}, status=404)
 
@@ -271,7 +298,12 @@ class QuestionInferenceView(APIView):
         inferences = {}
 
         for post in posts: # iterate through each post
-            inferences[post.id] = make_inferences(qa_model, sent_model, question, post.message)
+            inferences[post.id] = make_inferences(
+                qa_model, 
+                sent_model, 
+                question, 
+                post.message
+            )
 
         full_data = {
             'question': question,

@@ -34,7 +34,7 @@ class ForumInferences(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
-        return f'Inferences for {self.forum.get_file_name()}'
+        return f'Inferences for { self.forum.get_file_name() }'
 
 @receiver(pre_delete, sender=ForumInferences)
 def pre_delete_forums_inference(sender, instance, **kwargs):

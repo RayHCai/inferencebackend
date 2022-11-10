@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from inferencebackend.test_utils import forum_csv_to_array, forum_csv_to_df
+from inferencebackend.utils import forum_csv_to_array, forum_csv_to_df
 
 from forums.models import Forums
 from forums.forms import ForumPostsForm
