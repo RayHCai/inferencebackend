@@ -335,7 +335,7 @@ class DeleteInferencesView(APIView):
         Request parameters: 
             forum_id: id of forum
         '''
-        
+
         forum_id = request.data.get('forum_id')
 
         if not forum_id:
