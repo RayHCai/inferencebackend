@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-0xgewcna8fox_c@8!#%v1+$sez5d3$8p46g=y%%4rhvt@mp7iu'
 
-DEBUG = True
+DEBUG = False
 
 INFERENCES_FILE_LOCATION = 'forum-inference-files/'
 FORUM_FILE_LOCATION = 'forum-csv-files/'
@@ -21,6 +21,8 @@ ALLOWED_HOSTS = [
     'inferencebackend-production.up.railway.app',
     'inferencefrontend-production.up.railway.app'
 ]
+
+CSRF_TRUSTED_ORIGINS=['inferencebackend-production.up.railway.app', 'inferencefrontend-production.up.railway.app']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
