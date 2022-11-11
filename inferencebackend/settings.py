@@ -19,10 +19,11 @@ SENT_MODEL_NAME = 'stsb-mpnet-base-v2'
 
 ALLOWED_HOSTS = [
     'inferencebackend-production.up.railway.app',
-    'inferencefrontend-production.up.railway.app'
+    'inferencefrontend-production.up.railway.app',
+    'calvin-inference.netlify.app'
 ]
 
-CSRF_TRUSTED_ORIGINS=['inferencebackend-production.up.railway.app', 'inferencefrontend-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS=['https://inferencebackend-production.up.railway.app', 'https://inferencefrontend-production.up.railway.app', 'https://calvin-inference.netlify.app']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
