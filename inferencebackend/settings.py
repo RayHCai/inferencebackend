@@ -17,13 +17,7 @@ NUM_CORES = multiprocessing.cpu_count()
 QA_MODEL_NAME = 'deepset/roberta-base-squad2'
 SENT_MODEL_NAME = 'stsb-mpnet-base-v2'
 
-ALLOWED_HOSTS = [
-    'https://inferencebackend-production.up.railway.app',
-    'https://inferencefrontend-production.up.railway.app',
-    'https://calvin-inference.netlify.app',
-    'localhost',
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS=[
     'https://inferencebackend-production.up.railway.app', 
