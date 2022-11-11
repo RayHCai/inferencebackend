@@ -17,7 +17,7 @@ NUM_CORES = multiprocessing.cpu_count()
 QA_MODEL_NAME = 'deepset/roberta-base-squad2'
 SENT_MODEL_NAME = 'stsb-mpnet-base-v2'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['inferencebackend-production.up.railway.app']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
