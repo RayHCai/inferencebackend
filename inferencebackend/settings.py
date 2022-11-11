@@ -19,7 +19,7 @@ SENT_MODEL_NAME = 'stsb-mpnet-base-v2'
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS=[
+CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS=[
     'https://inferencebackend-production.up.railway.app', 
     'https://inferencefrontend-production.up.railway.app', 
     'https://calvin-inference.netlify.app',
@@ -29,7 +29,7 @@ CSRF_TRUSTED_ORIGINS=[
     'http://127.0.0.1:8000',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = False
 # Application definition
 
