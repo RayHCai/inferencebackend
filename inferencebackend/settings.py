@@ -5,7 +5,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-0xgewcna8fox_c@8!#%v1+$sez5d3$8p46g=y%%4rhvt@mp7iu'
+SECRET_KEY = 'django-insecure-0xgewcna8fox_c@8!#%v1+$sez5xd3$8p46g=y%%4rhvt@mp7iu'
 
 DEBUG = False
 
@@ -18,12 +18,22 @@ QA_MODEL_NAME = 'deepset/roberta-base-squad2'
 SENT_MODEL_NAME = 'stsb-mpnet-base-v2'
 
 ALLOWED_HOSTS = [
-    'inferencebackend-production.up.railway.app',
-    'inferencefrontend-production.up.railway.app',
-    'calvin-inference.netlify.app'
+    'https://inferencebackend-production.up.railway.app',
+    'https://inferencefrontend-production.up.railway.app',
+    'https://calvin-inference.netlify.app',
+    'localhost',
+    '127.0.0.1',
 ]
 
-CSRF_TRUSTED_ORIGINS=['https://inferencebackend-production.up.railway.app', 'https://inferencefrontend-production.up.railway.app', 'https://calvin-inference.netlify.app']
+CSRF_TRUSTED_ORIGINS=[
+    'https://inferencebackend-production.up.railway.app', 
+    'https://inferencefrontend-production.up.railway.app', 
+    'https://calvin-inference.netlify.app',
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:8000',
+]
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -74,16 +84,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'inferencebackend.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'AdZFHafT7Kn8bKgI3QRq',
-        'HOST': 'containers-us-west-87.railway.app',
-        'PORT': '7442',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'railway',
+            'USER': 'postgres',
+            'PASSWORD': 'AdZFHafT7Kn8bKgI3QRq',
+            'HOST': 'containers-us-west-87.railway.app',
+            'PORT': '7442',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
