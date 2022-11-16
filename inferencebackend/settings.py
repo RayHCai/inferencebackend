@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-0xgewcna8fox_c@8!#%v1+$sez5xd3$8p46g=y%%4rhvt@mp7iu'
 
-DEBUG = False
+DEBUG = True
 
 INFERENCES_FILE_LOCATION = 'forum-inference-files/'
 FORUM_FILE_LOCATION = 'forum-csv-files/'
